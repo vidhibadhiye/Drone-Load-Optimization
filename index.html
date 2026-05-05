@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knapsack Algorithm Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f5f5f0;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: #666;
+    background: #e8e8e2;
+    border: 1px solid #d4d4cc;
+    border-radius: 999px;
+    padding: 2px 12px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+
+  .surface {
+    background: #ececea;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  label.field-label {
+    font-size: 0.8rem;
+    color: #666;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: #185FA5;
+    cursor: pointer;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .slider-val {
+    font-size: 1.2rem;
+    font-weight: 600;
+    min-width: 30px;
+  }
+
+  .package-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .pkg-card {
+    background: #ececea;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .pkg-label {
+    font-size: 0.75rem;
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .pkg-inputs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .pkg-inputs > div {
+    flex: 1;
+  }
+
+  .pkg-inputs label {
+    font-size: 0.7rem;
+    color: #777;
+  }
+
+  .pkg-inputs input[type="number"] {
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .pkg-inputs input[type="number"]:focus {
+    border-color: #185FA5;
+  }
+
+  .result-card {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .dot-blue { background: #185FA5; }
+  .dot-teal { background: #0F6E56; }
+
+  .result-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #555;
+  }
+
+  .result-value {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #111;
+  }
+
+  .result-sublabel {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .tag-blue {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #E6F1FB;
+    color: #0C447C;
+    border: 1px solid #B5D4F4;
+  }
+
+  .tag-teal {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #E1F5EE;
+    color: #085041;
+    border: 1px solid #9FE1CB;
+  }
+
+  .section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .ratio-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+  }
+
+  .ratio-bar-label {
+    font-size: 0.75rem;
+    color: #666;
+    min-width: 46px;
+  }
+
+  .ratio-track {
+    flex: 1;
+    height: 10px;
+    background: #e8e8e2;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .ratio-fill {
+    height: 100%;
+    background: #185FA5;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+
+  .ratio-val {
+    font-size: 0.75rem;
+    color: #888;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+
+  th {
+    text-align: center;
+    padding: 4px 6px;
+    color: #888;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 500;
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 4px 6px;
+    text-align: center;
+    color: #444;
+  }
+
+  td:first-child {
+    text-align: left;
+    color: #888;
+  }
+
+  .cell-highlight {
+    background: #E6F1FB;
+    color: #0C447C;
+    font-weight: 600;
+    border-radius: 4px;
+  }
+
+  #insight {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    border: 1px solid #e0e0e0;
+    color: #666;
+    background: #f5f5f0;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  #insight.agree {
+    background: #EAF3DE;
+    color: #3B6D11;
+    border-color: #C0DD97;
+  }
+
+  #insight.differ {
+    background: #FAEEDA;
+    color: #854F0B;
+    border-color: #FAC775;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 1.5rem 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Knapsack Solver</h1>
+  <span class="subtitle">DP vs Greedy</span>
+</div>
+
+<!-- Sliders -->
+<div class="grid-2">
+  <div class="surface">
+    <label class="field-label">Capacity</label>
+    <div class="slider-row">
+      <input type="range" id="capacity" min="5" max="50" value="15" step="1" oninput="syncVal('capacity','capacity-out'); run()">
+      <span id="capacity-out" class="slider-val">15</span>
+    </div>
+  </div>
+  <div class="surface">
+    <label class="field-label">Packages</label>
+    <div class="slider-row">
+      <input type="range" id="npack" min="2" max="8" value="4" step="1" oninput="syncVal('npack','npack-out'); initPackages(); run()">
+      <span id="npack-out" class="slider-val">4</span>
+    </div>
+  </div>
+</div>
+
+<!-- Package inputs -->
+<div id="package-inputs" class="package-grid"></div>
+
+<!-- Results -->
+<div class="grid-2">
+  <div class="result-card">
+    <div class="result-header">
+      <div class="dot dot-blue"></div>
+      <span class="result-label">Dynamic Programming</span>
+    </div>
+    <div class="result-value" id="dp-result">—</div>
+    <div class="result-sublabel">max profit (exact)</div>
+    <div class="tags" id="dp-items"></div>
+  </div>
+  <div class="result-card">
+    <div class="result-header">
+      <div class="dot dot-teal"></div>
+      <span class="result-label">Greedy (fractional)</span>
+    </div>
+    <div class="result-value" id="gr-result">—</div>
+    <div class="result-sublabel">max profit (approx)</div>
+    <div class="tags" id="gr-items"></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- Ratio bars -->
+<div class="card" style="margin-bottom:1rem;">
+  <p class="section-title">Profit / weight ratio (sorted)</p>
+  <div id="ratio-bars"></div>
+</div>
+
+<!-- DP Table -->
+<div class="card" style="margin-bottom:1rem;">
+  <p class="section-title">DP table (last columns)</p>
+  <div id="dp-table" style="overflow-x:auto;"></div>
+</div>
+
+<!-- Insight -->
+<div id="insight">Run to see insight.</div>
+
+<script>
+  let weights = [], profits = [], n = 4;
+
+  function syncVal(id, outId) {
+    document.getElementById(outId).textContent = document.getElementById(id).value;
+  }
+
+  function initPackages() {
+    n = parseInt(document.getElementById('npack').value);
+    const container = document.getElementById('package-inputs');
+    const dW = [4,3,5,2,6,1,7,3];
+    const dP = [5,4,3,7,2,9,6,4];
+    let html = '';
+    for (let i = 0; i < n; i++) {
+      const w = weights[i] ?? dW[i];
+      const p = profits[i] ?? dP[i];
+      html += `<div class="pkg-card">
+        <div class="pkg-label">Package ${i+1}</div>
+        <div class="pkg-inputs">
+          <div>
+            <label>Weight</label>
+            <input type="number" id="w${i}" value="${w}" min="1" max="20" oninput="collectAndRun()">
+          </div>
+          <div>
+            <label>Profit</label>
+            <input type="number" id="p${i}" value="${p}" min="1" max="50" oninput="collectAndRun()">
+          </div>
+        </div>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function collectAndRun() {
+    weights = []; profits = [];
+    for (let i = 0; i < n; i++) {
+      weights.push(Math.max(1, parseInt(document.getElementById('w'+i)?.value) || 1));
+      profits.push(Math.max(1, parseInt(document.getElementById('p'+i)?.value) || 1));
+    }
+    run();
+  }
+
+  function collectWeightsProfit() {
+    weights = []; profits = [];
+    for (let i = 0; i < n; i++) {
+      weights.push(Math.max(1, parseInt(document.getElementById('w'+i)?.value) || 1));
+      profits.push(Math.max(1, parseInt(document.getElementById('p'+i)?.value) || 1));
+    }
+  }
+
+  function runDP(W) {
+    const dp = Array.from({length: n+1}, () => new Array(W+1).fill(0));
+    for (let i = 1; i <= n; i++) {
+      for (let w = 0; w <= W; w++) {
+        dp[i][w] = dp[i-1][w];
+        if (weights[i-1] <= w)
+          dp[i][w] = Math.max(dp[i][w], profits[i-1] + dp[i-1][w - weights[i-1]]);
+      }
+    }
+    let chosen = [], w = W;
+    for (let i = n; i > 0; i--) {
+      if (dp[i][w] !== dp[i-1][w]) { chosen.push(i-1); w -= weights[i-1]; }
+    }
+    return {profit: dp[n][W], chosen, dp};
+  }
+
+  function runGreedy(W) {
+    let idx = Array.from({length:n},(_,i)=>i);
+    idx.sort((a,b)=>(profits[b]/weights[b])-(profits[a]/weights[a]));
+    let total = 0, cap = W, parts = [];
+    for (let ii of idx) {
+      if (cap <= 0) break;
+      if (weights[ii] <= cap) { total += profits[ii]; cap -= weights[ii]; parts.push({idx:ii,frac:1}); }
+      else { total += (profits[ii]/weights[ii])*cap; parts.push({idx:ii,frac:cap/weights[ii]}); cap=0; }
+    }
+    return {profit: total, parts};
+  }
+
+  function run() {
+    const W = parseInt(document.getElementById('capacity').value);
+    collectWeightsProfit();
+    const dpRes = runDP(W);
+    const grRes = runGreedy(W);
+
+    document.getElementById('dp-result').textContent = dpRes.profit;
+    document.getElementById('dp-items').innerHTML = dpRes.chosen.map(i =>
+      `<span class="tag-blue">pkg ${i+1} (w:${weights[i]}, p:${profits[i]})</span>`
+    ).join('');
+
+    document.getElementById('gr-result').textContent = grRes.profit.toFixed(2);
+    document.getElementById('gr-items').innerHTML = grRes.parts.map(({idx:i,frac}) =>
+      `<span class="tag-teal">${frac===1?'pkg':'~pkg'} ${i+1} (${Math.round(frac*100)}%)</span>`
+    ).join('');
+
+    let ratios = Array.from({length:n},(_,i)=>({i, r: profits[i]/weights[i]}));
+    ratios.sort((a,b)=>b.r-a.r);
+    const maxR = ratios[0]?.r || 1;
+    document.getElementById('ratio-bars').innerHTML = ratios.map(({i,r})=>`
+      <div class="ratio-bar-row">
+        <span class="ratio-bar-label">pkg ${i+1}</span>
+        <div class="ratio-track"><div class="ratio-fill" style="width:${Math.round((r/maxR)*100)}%"></div></div>
+        <span class="ratio-val">${r.toFixed(2)}</span>
+      </div>
+    `).join('');
+
+    const dp = dpRes.dp;
+    const startCol = Math.max(0, W - 4);
+    let tbl = `<table><tr><th>item \\ cap</th>`;
+    for (let c = startCol; c <= W; c++) tbl += `<th>${c}</th>`;
+    tbl += `</tr>`;
+    for (let i = 0; i <= n; i++) {
+      tbl += `<tr><td>${i === 0 ? '—' : 'pkg ' + i}</td>`;
+      for (let c = startCol; c <= W; c++) {
+        const hi = i===n && c===W;
+        tbl += `<td${hi?' class="cell-highlight"':''}>${dp[i][c]}</td>`;
+      }
+      tbl += `</tr>`;
+    }
+    tbl += `</table>`;
+    document.getElementById('dp-table').innerHTML = tbl;
+
+    const diff = grRes.profit - dpRes.profit;
+    const ins = document.getElementById('insight');
+    if (Math.abs(diff) < 0.01) {
+      ins.textContent = 'Both algorithms agree on the optimal solution for this configuration.';
+      ins.className = 'agree';
+    } else {
+      ins.textContent = `Greedy overestimates by ${diff.toFixed(2)} — fractional items inflate the result. DP gives the exact integer optimum.`;
+      ins.className = 'differ';
+    }
+  }
+
+  initPackages();
+  run();
+</script>
+
+</body>
+</html>
